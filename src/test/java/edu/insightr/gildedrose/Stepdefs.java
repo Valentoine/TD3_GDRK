@@ -10,7 +10,7 @@ import static org.junit.Assert.assertThat;
 
 public class Stepdefs {
 
-    private Inventory inventory;
+    private Visitor V;
     private Item[] items;
     private Item vest;
     private Item conjured;
@@ -20,10 +20,10 @@ public class Stepdefs {
     private Item backstage;
 
 
-    @Given("^I have a new inventory$")
-    public void iHaveANewInventory() throws Throwable {
-        inventory = new Inventory();
-        items = inventory.getItems();
+    @Given("^I have a new visitor$")
+    public void iHaveANewVisitor() throws Throwable {
+        V = new Visitor();
+        items = V.getInv().getItems();
         vest = items[0];
         agedbrie = items[1];
         elixir = items[2];
@@ -64,7 +64,7 @@ public class Stepdefs {
 
     @When("^I update the inventory$")
     public void iUpdateTheInventory() throws Throwable {
-        inventory.updateQuality();
+        V.updateQuality();
     }
 }
 
