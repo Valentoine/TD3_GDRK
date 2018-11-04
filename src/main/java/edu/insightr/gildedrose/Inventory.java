@@ -2,6 +2,10 @@ package edu.insightr.gildedrose;
 
 public class Inventory {
 
+    public Item[] getItems() {
+        return items;
+    }
+
     private Item[] items;
 
     public Inventory(Item[] items) {
@@ -32,57 +36,54 @@ public class Inventory {
     }
 
     public void updateQuality() {
-        for (int i = 0; i < items.length; i++) {
-            if (items[i].getName() != "Aged Brie"
-                    && items[i].getName() != "Backstage passes to a TAFKAL80ETC concert") {
-                if (items[i].getQuality() > 0) {
-                    if (items[i].getName() != "Sulfuras, Hand of Ragnaros") {
-                        items[i].setQuality(items[i].getQuality() - 1);
-                    }
+
+        for(int i=0; i<items.length; i++)
+        {
+            //first the quality never be negative
+            if(items[i].getQuality()>=0 || items[i].getQuality()<= 50)
+            {
+                //secondly the decision criter the most impact is if the quality increase or decrease
+                if (items[i].getName() == "+5 Dexterity Vest"
+                        || items[i].getName() == "Elixir of the Mongoose"
+                        || items[i].getName() == "Conjured Mana Cake")
+                {
+                    //thirdly we look at the sellin value and if is a legendary item
+                    int low = 1;
+                    if(items[i].getName()== "Conjured Mana Cake")
+                        low = 2;
+
+                    if(items[i].getSellIn()>0)
+                        items[i].setQuality(items[i].getQuality() - low);
+                    else
+                        items[i].setQuality(items[i].getQuality() - 2 * low);
+
                 }
-            } else {
-                if (items[i].getQuality() < 50) {
-                    items[i].setQuality(items[i].getQuality() + 1);
+                else if (items[i].getName() == "Aged Brie" || items[i].getName() == "Backstage passes to a TAFKAL80ETC concert")
+                {
+                    int plus = 1;
+                    if((items[i].getName()== "Backstage passes to a TAFKAL80ETC concert" && items[i].getSellIn() < 11) || (items[i].getName()== "Aged Brie" && items[i].getSellIn() <= 0))
+                        plus = 2;
+                    else if(items[i].getName()== "Backstage passes to a TAFKAL80ETC concert" && items[i].getSellIn() < 6)
+                        plus = 3;
 
-                    if (items[i].getName() == "Backstage passes to a TAFKAL80ETC concert") {
-                        if (items[i].getSellIn() < 11) {
-                            if (items[i].getQuality() < 50) {
-                                items[i].setQuality(items[i].getQuality() + 1);
-                            }
-                        }
-
-                        if (items[i].getSellIn() < 6) {
-                            if (items[i].getQuality() < 50) {
-                                items[i].setQuality(items[i].getQuality() + 1);
-                            }
-                        }
-                    }
+                    items[i].setQuality(items[i].getQuality() + plus);
                 }
             }
+            //we can have problems if quality is negative or under 50, so we correct here instead of adding all the conditions in the code at the top
+            if(items[i].getQuality() <0)
+                items[i].setQuality(0);
+            else if(items[i].getQuality()>50 && items[i].getName() != "Sulfuras, Hand of Ragnaros")
+                items[i].setQuality(50);
 
-            if (items[i].getName() != "Sulfuras, Hand of Ragnaros") {
+            //and we decrease the sellin value even if it's Sulfuras because it's constant
+            if (items[i].getName() != "Sulfuras, Hand of Ragnaros")
+            {
                 items[i].setSellIn(items[i].getSellIn() - 1);
-            }
-
-            if (items[i].getSellIn() < 0) {
-                if (items[i].getName() != "Aged Brie") {
-                    if (items[i].getName() != "Backstage passes to a TAFKAL80ETC concert") {
-                        if (items[i].getQuality() > 0) {
-                            if (items[i].getName() != "Sulfuras, Hand of Ragnaros") {
-                                items[i].setQuality(items[i].getQuality() - 1);
-                            }
-                        }
-                    } else {
-                        items[i].setQuality(items[i].getQuality() - items[i].getQuality());
-                    }
-                } else {
-                    if (items[i].getQuality() < 50) {
-                        items[i].setQuality(items[i].getQuality() + 1);
-                    }
-                }
             }
         }
     }
+
+
 
     public static void main(String[] args) {
         Inventory inventory = new Inventory();
