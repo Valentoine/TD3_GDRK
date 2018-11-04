@@ -2,7 +2,7 @@ Feature: Conjured Item
   # a conjured item quality decreases twice the normal rate
 
   Scenario: conjured item update
-    Given I have a new visitor
+    Given I have a new strategy
     Then the quality of the conjured item is 6
     When I update the inventory
     Then the quality of the conjured item is 4
